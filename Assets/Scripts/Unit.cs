@@ -5,9 +5,15 @@ public class Unit : MonoBehaviour {
     private const string IS_WALKING = "IsWalking";
     [SerializeField] private Animator unitAnimator;
     private Vector3 targetPosition;
+    private GridPosition currentGridPosition;
 
     private void Awake() {
         targetPosition = transform.position;
+    }
+
+    private void Start() {
+        currentGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        LevelGrid.Instance.AddUnitAtGridPosition(currentGridPosition, this);
     }
 
     private void Update() {
@@ -27,6 +33,12 @@ public class Unit : MonoBehaviour {
         }
         else {
             unitAnimator.SetBool(IS_WALKING, false);
+        }
+
+        GridPosition newGridPosition = LevelGrid.Instance.GetGridPosition(transform.position);
+        if (newGridPosition != currentGridPosition) {
+            LevelGrid.Instance.UnitMovedGridPosition(this, currentGridPosition, newGridPosition);
+            currentGridPosition = newGridPosition;
         }
     }
 
