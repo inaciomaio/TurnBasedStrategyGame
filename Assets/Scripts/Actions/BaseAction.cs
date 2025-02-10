@@ -6,6 +6,7 @@ public abstract class BaseAction : MonoBehaviour {
     protected Unit unit;
     protected bool isActive;
     protected Action onActionComplete;
+    [SerializeField] private int actionCost = 1;
 
     protected virtual void Awake() {
         unit = GetComponent<Unit>();
@@ -21,4 +22,9 @@ public abstract class BaseAction : MonoBehaviour {
     }
 
     public abstract List<GridPosition> GetValidActionGridPositionList();
+
+    public int GetActionPointsCost() {
+        return actionCost;
+    }
+
 }
