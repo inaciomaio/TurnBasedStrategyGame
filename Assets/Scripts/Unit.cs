@@ -9,6 +9,7 @@ public class Unit : MonoBehaviour {
     private SpinAction spinAction;
     private BaseAction[] baseActionArray;
     [SerializeField] private int actionPointsMax = 2;
+    [SerializeField] private bool isEnemy;
     private int actionPoints;
 
     private void Awake() {
@@ -45,6 +46,10 @@ public class Unit : MonoBehaviour {
         return currentGridPosition;
     }
 
+    public Vector3 GetWorldPosition() {
+        return transform.position;
+    }
+
     public BaseAction[] GetBaseActionArray() {
         return baseActionArray;
     }
@@ -77,8 +82,18 @@ public class Unit : MonoBehaviour {
     }
 
     private void TurnSystem_OnTurnChanged(object sender, EventArgs e) {
-        actionPoints = actionPointsMax;
+        if ((IsEnemy() && !TurnSystem.Instance.IsPlayerTurn()) || (!IsEnemy() && TurnSystem.Instance.IsPlayerTurn())) {
+            actionPoints = actionPointsMax;
 
-        OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+            OnAnyActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public bool IsEnemy() {
+        return isEnemy;
+    }
+
+    public void Damage() {
+        Debug.Log(transform + "damaged");
     }
 }
