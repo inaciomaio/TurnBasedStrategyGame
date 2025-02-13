@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveAction : BaseAction {
+
+    public event EventHandler OnStartMoving;
+    public event EventHandler OnStopMoving;
+
     private const string IS_WALKING = "IsWalking";
-    [SerializeField] private Animator unitAnimator;
     [SerializeField] private int maxMoveDistance = 4;
     private Vector3 targetPosition;
 
@@ -21,16 +24,11 @@ public class MoveAction : BaseAction {
         float stoppingDistance = .1f;
 
         if (Vector3.Distance(targetPosition, transform.position) > stoppingDistance) {
-
             float moveSpeed = 4f;
             transform.position += moveDirection * moveSpeed * Time.deltaTime;
-
-
-
-            unitAnimator.SetBool(IS_WALKING, true);
         }
         else {
-            unitAnimator.SetBool(IS_WALKING, false);
+            OnStopMoving?.Invoke(this, EventArgs.Empty);
             ActionComplete();
         }
 
@@ -40,6 +38,8 @@ public class MoveAction : BaseAction {
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete) {
         ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+
+        OnStartMoving(this, EventArgs.Empty);
 
     }
     public override List<GridPosition> GetValidActionGridPositionList() {
