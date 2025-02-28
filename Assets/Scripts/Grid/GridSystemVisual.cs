@@ -72,7 +72,7 @@ public class GridSystemVisual : MonoBehaviour {
     public void HideAllGridPositions() {
         for (int x = 0; x < LevelGrid.Instance.GetWidth(); x++) {
             for (int z = 0; z < LevelGrid.Instance.GetHeight(); z++) {
-                gridSystemVisualSingleArray[z, x].Hide();
+                gridSystemVisualSingleArray[x, z].Hide();
             }
         }
     }
